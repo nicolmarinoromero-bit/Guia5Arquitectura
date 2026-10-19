@@ -1,10 +1,10 @@
 class Task {
-  constructor({ id, title, description = "", status = "pendiente" }) {
+  constructor({ id, title, description = "", status = "pendiente", createdAt = new Date().toISOString() }) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.status = status;
-    this.createdAt = new Date().toISOString();
+    this.createdAt = createdAt;
   }
 }
 
