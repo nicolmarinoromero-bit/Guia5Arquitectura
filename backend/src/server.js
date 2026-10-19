@@ -1,25 +1,12 @@
-const express = require("express");
-const cors = require("cors");
-const { TaskRepository } = require("./taskRepository");
-const { TaskService } = require("./taskService");
-const { createTaskController } = require("./taskController");
-const { createTaskRoutes } = require("./taskRoutes");
+const { createApplication } = require("./container");
 
-const app = express();
-const port = process.env.PORT || 3000;
+function startServer(port = process.env.PORT || 3000) {
+  const app = createApplication();
+  return app.listen(port, () => console.log(`API lista en http://localhost:${port}`));
+}
 
-app.use(cors());
-app.use(express.json());
+if (require.main === module) {
+  startServer();
+}
 
-const repository = new TaskRepository();
-const service = new TaskService(repository);
-const controller = createTaskController(service);
-
-app.get("/api/health", (req, res) => res.json({ status: "ok" }));
-app.use("/api/tasks", createTaskRoutes(controller));
-
-app.use((error, req, res, next) => {
-  res.status(error.statusCode || 500).json({ error: error.message || "Error interno del servidor" });
-});
-
-app.listen(port, () => console.log(`API lista en http://localhost:${port}`));
+module.exports = { startServer };
